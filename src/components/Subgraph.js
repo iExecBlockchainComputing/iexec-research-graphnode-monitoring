@@ -1,7 +1,14 @@
 import React from 'react';
-import { Row, Col, ProgressBar } from 'react-bootstrap';
+import { Badge, Card, ProgressBar } from 'react-bootstrap';
 
 import graphql from '../graphql';
+
+function getStyle(data)
+{
+	if      (data.failed) return { class: 'danger',  descr: 'failed'  }
+	else if (data.synced) return { class: 'success', descr: 'synched' }
+	else                  return { class: 'info',    descr: 'pending' }
+}
 
 class Subgraph extends React.Component
 {
@@ -32,24 +39,34 @@ class Subgraph extends React.Component
 			return null;
 		}
 
-		const chain   = this.state.data.chains[0];
-		const variant = this.state.data.synced ? 'success' : this.state.data.failed ? 'danger' : 'info'
+		const chain = this.state.data.chains[0];
+		const style = getStyle(this.state.data);
 
 		return (
-			<Row>
-				<Col md="2">
-					{ chain.network }
-				</Col>
-				<Col md="10">
+			<Card bg="light" border={style.class} text={style.class} className="shadow mb-3">
+				<Card.Header className="font-weight-bold text-capitalize p-3">
+					<h3>
+						{ chain.network }
+					</h3>
+					<Badge pill variant={style.class} className="float-right">
+						{style.descr}
+					</Badge>
+				</Card.Header>
+				<Card.Body>
 					<ProgressBar
 						animated
-						variant={variant}
+						variant={style.class}
 						now={chain.latestBlock.number}
 						max={chain.chainHeadBlock.number}
 						label={`${chain.latestBlock.number} / ${chain.chainHeadBlock.number}`}
 					/>
-				</Col>
-			</Row>
+					<Card.Text>
+						<code>
+							{this.state.data.error}
+						</code>
+					</Card.Text>
+				</Card.Body>
+			</Card>
 		);
 	}
 }

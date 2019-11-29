@@ -1,5 +1,6 @@
 import React from 'react';
 import { Container } from 'react-bootstrap';
+import '../css/App.css';
 
 import Subgraph from './Subgraph';
 
@@ -17,14 +18,14 @@ const config = {
 
 const App = () => {
 	return (
-		<Container>
-			<h1>
-				iExec graphnode monitoring
-			</h1>
-			{
-				config.subgraphs.map(name => <Subgraph key={name} name={name} config={config}/>)
-			}
-		</Container>
+		<div className="app">
+			<h1>iExec graphnode monitoring</h1>
+			<Container>
+				{
+					config.subgraphs.map(name => <Subgraph key={name} name={name} config={config}/>)
+				}
+			</Container>
+		</div>
 	);
 }
 
