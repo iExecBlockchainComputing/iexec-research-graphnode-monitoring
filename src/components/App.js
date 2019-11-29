@@ -19,7 +19,7 @@ const App = () => {
 	return (
 		<Container>
 			<h1>
-				iExec graphnode monitoring:
+				iExec graphnode monitoring
 			</h1>
 			{
 				config.subgraphs.map(name => <Subgraph key={name} name={name} config={config}/>)
