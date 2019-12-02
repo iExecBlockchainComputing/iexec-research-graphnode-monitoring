@@ -1,4 +1,6 @@
-export default `
+import gql from 'graphql-tag';
+
+export default gql`
 query subgraph_status($name: String)
 {
   result: indexingStatusesForSubgraphName(subgraphName:$name)

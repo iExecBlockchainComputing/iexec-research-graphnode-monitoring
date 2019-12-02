@@ -1,74 +1,62 @@
 import React from 'react';
+import { useQuery } from '@apollo/react-hooks';
 import { Badge, Card, ProgressBar } from 'react-bootstrap';
 
 import graphql from '../graphql';
 
-function getStyle(data)
+function extract(data)
 {
-	if      (data.failed) return { class: 'danger',  descr: 'failed'  }
-	else if (data.synced) return { class: 'success', descr: 'synched' }
-	else                  return { class: 'info',    descr: 'pending' }
+	if      (data.failed) return { class: 'danger',  descr: 'failed',  chain: data.chains[0], error: data.error }
+	else if (data.synced) return { class: 'success', descr: 'synched', chain: data.chains[0], error: data.error }
+	else                  return { class: 'info',    descr: 'pending', chain: data.chains[0], error: data.error }
 }
 
-class Subgraph extends React.Component
-{
-	state= { data: null }
+const Subgraph = (props) => {
 
-	componentDidMount()
-	{
-		this.tick()
-		this.interval = setInterval(() => this.tick(), 10 * 1000);
-	}
+	console.log("fetch")
 
-	componentWillUnmount()
-	{
-		clearInterval(this.interval);
-	}
-
-	tick()
-	{
-		graphql.run(this.props.config.endpoint, graphql.query.subgraph, { name: this.props.name })
-		.then(chunk => this.setState({ data: chunk.data.result[0] }))
-		.catch(console.error)
-	}
-
-	render()
-	{
-		if (!this.state.data)
+	const { data, loading, error } = useQuery(
+		graphql.subgraph,
 		{
-			return null;
+			variables:
+			{
+				name: props.name
+			},
+			pollInterval: 10000
 		}
+	)
 
-		const chain = this.state.data.chains[0];
-		const style = getStyle(this.state.data);
+	if (loading) { return null;              }
+	if (error  ) { return `Error! ${error}`; }
 
-		return (
-			<Card bg="light" border={style.class} text={style.class} className="shadow mb-3">
-				<Card.Header className="font-weight-bold text-capitalize p-3">
-					<h3>
-						{ chain.network }
-					</h3>
-					<Badge pill variant={style.class} className="float-right">
-						{style.descr}
-					</Badge>
-				</Card.Header>
-				<Card.Body>
-					<ProgressBar
-						animated
-						variant={style.class}
-						now={chain.latestBlock.number}
-						max={chain.chainHeadBlock.number}
-						label={`${chain.latestBlock.number} / ${chain.chainHeadBlock.number}`}
-					/>
-					<Card.Text>
-						<code>
-							{this.state.data.error}
-						</code>
-					</Card.Text>
-				</Card.Body>
-			</Card>
-		);
-	}
+	const details = extract(data.result[0]);
+
+	return (
+		<Card bg="light" border={details.class} text={details.class} className="shadow mb-3">
+			<Card.Header className="font-weight-bold text-capitalize p-3">
+				<h3>
+					{ details.chain.network }
+				</h3>
+				<Badge pill variant={details.class} className="float-right">
+					{details.descr}
+				</Badge>
+			</Card.Header>
+			<Card.Body>
+				<ProgressBar
+					animated
+					variant={details.class}
+					now={details.chain.latestBlock.number}
+					max={details.chain.chainHeadBlock.number}
+					label={`${details.chain.latestBlock.number} / ${details.chain.chainHeadBlock.number}`}
+				/>
+				<Card.Text>
+					<code>
+						{ details.error }
+					</code>
+				</Card.Text>
+			</Card.Body>
+		</Card>
+	);
 }
 
 export default Subgraph;

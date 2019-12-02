@@ -5,14 +5,13 @@ import '../css/App.css';
 import Subgraph from './Subgraph';
 
 const config = {
-	endpoint: 'http://thegraph.iex.ec:8030/graphql',
 	subgraphs:
 	[
-		"iexecblockchaincomputing/iexec-poco-v3",
-		"iexecblockchaincomputing/iexec-poco-v3-kovan",
-		"iexecblockchaincomputing/iexec-poco-v3-goerli",
-		"iexecblockchaincomputing/iexec-poco-v3-bellecour",
-		"iexecblockchaincomputing/iexec-poco-v3-viviani",
+		'iexecblockchaincomputing/iexec-poco-v3',
+		'iexecblockchaincomputing/iexec-poco-v3-kovan',
+		'iexecblockchaincomputing/iexec-poco-v3-goerli',
+		'iexecblockchaincomputing/iexec-poco-v3-bellecour',
+		'iexecblockchaincomputing/iexec-poco-v3-viviani',
 	],
 }
 

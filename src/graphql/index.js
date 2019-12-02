@@ -1,7 +1,5 @@
-import { default as run   } from './run';
-import { default as query } from './query';
+import { default as subgraph } from './subgraph';
 
 export default {
-	run,
-	query,
+	subgraph,
 };
