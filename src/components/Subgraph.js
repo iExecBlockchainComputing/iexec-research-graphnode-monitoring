@@ -12,9 +12,6 @@ function extract(data)
 }
 
 const Subgraph = (props) => {
-
-	console.log("fetch")
-
 	const { data, loading, error } = useQuery(
 		graphql.subgraph,
 		{
