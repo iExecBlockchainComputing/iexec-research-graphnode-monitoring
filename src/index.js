@@ -10,7 +10,7 @@ import App from './components/App';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/index.css';
 
-const uri    = 'http://thegraph.iex.ec:8030/graphql';
+const uri    = 'https://thegraph.iex.ec/monitoring/graphql';
 const cache  = new InMemoryCache();
 const link   = new HttpLink({ uri });
 const client = new ApolloClient({ cache, link });
