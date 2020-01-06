@@ -26,33 +26,39 @@ const Subgraph = (props) => {
 	if (loading) { return null;              }
 	if (error  ) { return `Error! ${error}`; }
 
-	const details = extract(data.result[0]);
-
 	return (
-		<Card bg="light" border={details.class} text={details.class} className="shadow mb-3">
-			<Card.Header className="font-weight-bold text-capitalize p-3">
-				<h3>
-					{ details.chain.network }
-				</h3>
-				<Badge pill variant={details.class} className="float-right">
-					{details.descr}
-				</Badge>
-			</Card.Header>
-			<Card.Body>
-				<ProgressBar
-					animated
-					variant={details.class}
-					now={details.chain.latestBlock.number}
-					max={details.chain.chainHeadBlock.number}
-					label={`${details.chain.latestBlock.number} / ${details.chain.chainHeadBlock.number}`}
-				/>
-				<Card.Text>
-					<code>
-						{ details.error }
-					</code>
-				</Card.Text>
-			</Card.Body>
-		</Card>
+		<>
+			{
+				data.result
+				.map(extract)
+				.map((details, i) =>
+					<Card key={i} bg="light" border={details.class} text={details.class} className="shadow mb-3">
+						<Card.Header className="font-weight-bold text-capitalize p-3">
+							<h3>
+								{ details.chain.network }
+							</h3>
+							<Badge pill variant={details.class} className="float-right">
+								{details.descr}
+							</Badge>
+						</Card.Header>
+						<Card.Body>
+							<ProgressBar
+								animated
+								variant={details.class}
+								now={details.chain.latestBlock.number}
+								max={details.chain.chainHeadBlock.number}
+								label={`${details.chain.latestBlock.number} / ${details.chain.chainHeadBlock.number}`}
+							/>
+							<Card.Text>
+								<code>
+									{ details.error }
+								</code>
+							</Card.Text>
+						</Card.Body>
+					</Card>
+				)
+			}
+		</>
 	);
 }
 
