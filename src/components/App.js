@@ -4,14 +4,21 @@ import '../css/App.css';
 
 import Subgraph from './Subgraph';
 
+const network = [
+	{ name: 'mainnet',   suffix: ''           },
+	{ name: 'ropsten',   suffix: '-ropsten'   },
+	{ name: 'rinkeby',   suffix: '-rinkeby'   },
+	{ name: 'goerli',    suffix: '-goerli'    },
+	{ name: 'kovan',     suffix: '-kovan'     },
+	{ name: 'bellecour', suffix: '-bellecour' },
+	{ name: 'viviani',   suffix: '-viviani'   },
+]
+
 const config = {
 	subgraphs:
 	[
-		'iexecblockchaincomputing/iexec-poco-v3',
-		'iexecblockchaincomputing/iexec-poco-v3-kovan',
-		'iexecblockchaincomputing/iexec-poco-v3-goerli',
-		'iexecblockchaincomputing/iexec-poco-v3-bellecour',
-		'iexecblockchaincomputing/iexec-poco-v3-viviani',
+		...Object.values(network).map(({suffix}) => 'iexecblockchaincomputing/iexec-poco-v3' + suffix),
+		...Object.values(network).map(({suffix}) => 'iexecblockchaincomputing/iexec-poco-v5' + suffix),
 	],
 }
 

@@ -6,12 +6,14 @@ import graphql from '../graphql';
 
 function extract(data)
 {
-	if      (data.failed) return { class: 'danger',  descr: 'failed',  chain: data.chains[0], error: data.error }
-	else if (data.synced) return { class: 'success', descr: 'synched', chain: data.chains[0], error: data.error }
-	else                  return { class: 'info',    descr: 'pending', chain: data.chains[0], error: data.error }
+	if      (data.failed) return { class: 'danger',  descr: 'failed',  ...data }
+	else if (data.synced) return { class: 'success', descr: 'synched', ...data }
+	else                  return { class: 'info',    descr: 'pending', ...data }
 }
 
 const Subgraph = (props) => {
+	const [ show, setShow ] = React.useState(false)
+
 	const { data, loading, error } = useQuery(
 		graphql.subgraph,
 		{
@@ -32,28 +34,41 @@ const Subgraph = (props) => {
 				data.result
 				.map(extract)
 				.map((details, i) =>
-					<Card key={i} bg="light" border={details.class} text={details.class} className="shadow mb-3">
+					<Card key={i} bg="light" border={details.class} text={details.class} className="pointer shadow mb-3" onClick={() => setShow(!show)}>
 						<Card.Header className="font-weight-bold text-capitalize p-3">
 							<h3>
-								{ details.chain.network }
+								{ props.name.split('/')[1] }
 							</h3>
 							<Badge pill variant={details.class} className="float-right">
 								{details.descr}
 							</Badge>
 						</Card.Header>
 						<Card.Body>
-							<ProgressBar
-								animated
-								variant={details.class}
-								now={details.chain.latestBlock.number}
-								max={details.chain.chainHeadBlock.number}
-								label={`${details.chain.latestBlock.number} / ${details.chain.chainHeadBlock.number}`}
-							/>
-							<Card.Text>
-								<code>
-									{ details.error }
-								</code>
-							</Card.Text>
+							{
+								details.chains.map((chain, i) =>
+									<ProgressBar
+										animated
+										variant={details.class}
+										now={chain.latestBlock.number}
+										max={chain.chainHeadBlock.number}
+										label={`${chain.latestBlock.number} / ${chain.chainHeadBlock.number} [${chain.network}]`}
+									/>
+								)
+							}
+							<table className='mx-auto' hidden={!show}>
+								<tr>
+									<td className='text-right font-weight-bold pr-2'>Subgraph:</td>
+									<td><code>{ details.subgraph }</code></td>
+								</tr>
+								<tr>
+									<td className='text-right font-weight-bold pr-2'>Node:</td>
+									<td><code>{ details.node }</code></td>
+								</tr>
+								<tr>
+									<td className='text-right font-weight-bold pr-2'>Error:</td>
+									<td><code>{ details.error || 'none' }</code></td>
+								</tr>
+							</table>
 						</Card.Body>
 					</Card>
 				)

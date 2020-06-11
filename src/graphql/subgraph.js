@@ -5,6 +5,8 @@ query subgraph_status($name: String)
 {
   result: indexingStatusesForSubgraphName(subgraphName:$name)
   {
+    subgraph
+    node
     chains
     {
       network
