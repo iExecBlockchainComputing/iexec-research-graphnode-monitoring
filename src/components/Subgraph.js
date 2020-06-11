@@ -34,8 +34,8 @@ const Subgraph = (props) => {
 				data.result
 				.map(extract)
 				.map((details, i) =>
-					<Card key={i} bg="light" border={details.class} text={details.class} className="pointer shadow mb-3" onClick={() => setShow(!show)}>
-						<Card.Header className="font-weight-bold text-capitalize p-3">
+					<Card key={i} bg="light" border={details.class} text={details.class} className="shadow mb-3">
+						<Card.Header className="pointer font-weight-bold text-capitalize p-3" onClick={() => setShow(!show)}>
 							<h3>
 								{ props.name.split('/')[1] }
 							</h3>
