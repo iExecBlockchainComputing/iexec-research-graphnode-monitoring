@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 export default gql`
 query subgraph_status($name: String)
 {
-  result: indexingStatusesForSubgraphName(subgraphName:$name)
+  result: indexingStatusForCurrentVersion(subgraphName:$name)
   {
     subgraph
     node
@@ -17,8 +17,13 @@ query subgraph_status($name: String)
       }
     }
     synced
-    failed
-    error
+    health
+    fatalError {
+      handler
+    }
+    nonFatalErrors {
+      handler
+    }
   }
 }
 `
